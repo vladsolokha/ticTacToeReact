@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# My modifications to tic-tac-toe React tutorial
+
+----------------------------------------------------------------------------------------------------------------------
+# Begin OG create-react-app readme
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
