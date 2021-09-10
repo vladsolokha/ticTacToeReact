@@ -2,29 +2,40 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends React.Component { //child
-  constructor(props) { //6-11 initialize state
-    super(props);
-    this.state = {
-      value: null,
-    };
-  }
-
+class Square extends React.Component { //child of Board and Game
   render() {
     return (
       <button 
         className="square" 
-        onClick={() => {this.setState({value: 'X'})}}
+        onClick={() => {this.props.onClick()}}
       >
-        {this.state.value} {/* passed prop from parent */}
+        {this.props.mark} {/* passed prop from parent */}
       </button>
     );
   }
 }
 
-class Board extends React.Component { //parent
+class Board extends React.Component { //parent of Square, child of Game
+  constructor(props) { //holds state for each square
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+  
   renderSquare(i) {
-    return <Square num={i}/>;
+    return (
+      <Square 
+        mark={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}  
+      />
+    );
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares: squares});
   }
 
   render() {
@@ -53,7 +64,7 @@ class Board extends React.Component { //parent
   }
 }
 
-class Game extends React.Component {
+class Game extends React.Component { //parent 
   render() {
     return (
       <div className="game">
