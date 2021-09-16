@@ -7,9 +7,9 @@ class Square extends React.Component { //child of Board and Game
     return (
       <button 
         className="square" 
-        onClick={() => {this.props.onClick()}}
+        onClick={() => {this.props.onClick()}} {/* tell Board when square is clicked */}
       >
-        {this.props.mark} {/* passed prop from parent */}
+        {this.props.mark} {/* values passed as props from parent */}
       </button>
     );
   }
@@ -19,7 +19,7 @@ class Board extends React.Component { //parent of Square, child of Game
   constructor(props) { //holds state for each square
     super(props);
     this.state = {
-      squares: Array(9).fill(null),
+      squares: Array(9).fill(null), //initialize board state
     };
   }
   
@@ -33,7 +33,7 @@ class Board extends React.Component { //parent of Square, child of Game
   }
 
   handleClick(i) {
-    const squares = this.state.squares.slice();
+    const squares = this.state.squares.slice(); //creates copy of array to modify it instead of the original
     squares[i] = 'X';
     this.setState({squares: squares});
   }
