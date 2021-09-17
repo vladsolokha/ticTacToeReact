@@ -27,7 +27,6 @@ class Board extends React.Component { //parent of Square, child of Game
   render() {
     return (
       <div>
-        <div className="status">{status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -72,16 +71,17 @@ function calculateWinner(squares) {
 class Game extends React.Component { //parent 
   constructor(props) {
     super(props); 
-      this.state = {
-        history: [{
-          squares: Array(9).fill(null),
-        }],
-        xIsNext: true,
-      };
+    this.state = {
+      history: [{
+        squares: Array(9).fill(null),
+      }],
+      stepNumber: 0,
+      xIsNext: true,
+    };
   }
   
   handleClick(i) {
-    const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice(); //creates copy of array to modify it instead of the original
     if (calculateWinner(squares) || squares[i]) {
@@ -92,12 +92,20 @@ class Game extends React.Component { //parent
       history: history.concat([{
         squares: squares
     }]), 
+    stepNumber: history.length,
     xIsNext: !this.state.xIsNext,});
   } // !(NOT) changes the true ==> false
+
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2) === 0,
+    })
+  }
   
   render() {
     const history = this.state.history;
-    const current = history[history.length -1];
+    const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     
     const moves = history.map((step, move) => {
@@ -105,7 +113,7 @@ class Game extends React.Component { //parent
         'Go to move: ' + move : 
         'Go to game start'; 
       return (
-        <li>
+        <li key={move}>
           <button onClick={() => this.jumpTo(move)}>
             {description}
           </button>
@@ -113,11 +121,11 @@ class Game extends React.Component { //parent
       )
     })
 
-    let status;
+    let displayMessage;
     if (winner) {
-      status = 'Winner: ' + winner;
+      displayMessage = 'Winner: ' + winner;
     } else {
-      status = 'Next player: ' + 
+      displayMessage = 'Next player: ' + 
           (this.state.xIsNext ? 'X' : 'O');
     }
     return (
@@ -129,7 +137,7 @@ class Game extends React.Component { //parent
           />
         </div>
         <div className="game-info">
-          <div>{status}</div>
+          <div>{displayMessage}</div>
           <ol>{moves}</ol>
         </div>
       </div>
